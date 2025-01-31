@@ -19,14 +19,12 @@ Cette version inclus :
 *********************************************************************************
 ********************************************************************************/
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h> 
 #include <time.h>
 
 #include "jeu.h"
-
 
 /************************/
 /* Variables Globales : */
@@ -35,7 +33,6 @@ Cette version inclus :
 // la hauteur minimale et la hauteur maximale dans les explorations minmax
 int hmin = 4;   // la borne inférieure de la "frontière d'exploration"
 int hmax = 30;  // la borne supérieure de la "frontière d'exploration"
-
 
 // Tableau de config pour garder la trace des conf déjà visitées
 struct config Partie[MAXPARTIE];
@@ -55,8 +52,6 @@ int (*Est[10])(struct config *);
 // nb de fonctions d'estimation dans le tableau précédent
 int nbEst;
 
-
-
 // pour statistques sur le nombre de coupes effectuées
 int nbAlpha = 0;
 int nbBeta = 0;
@@ -65,14 +60,12 @@ int nbBeta = 0;
 int prof = 0;
 int profMax = 0;
 
-
 /*******************************************/
 /*********** Programme principal  **********/
 /*******************************************/
 
 int main( int argc, char *argv[] )
 {
-
    int n, i, j, score, stop, cout, largeur, tour, estMin, estMax, nbp;
 
    int sx, dx, cout2, legal;
@@ -488,4 +481,3 @@ int main( int argc, char *argv[] )
    return 0;
 
 } // fin de main
-
