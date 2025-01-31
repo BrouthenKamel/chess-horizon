@@ -54,7 +54,7 @@ struct config {
  frontière d'exploration (c-a-d lorsque la conf est stable et la profondeur est dans [hmin,hmax]).
  npp : le nombre de pieces dans la conf parente (pour verifier si conf est stable ou non) 
 */
-int minmax_ab( struct config *conf, int h, int mode, int alpha, int beta, int largeur, \
+int minmax_ab( struct config *conf, int mode, int h, int alpha, int beta, int largeur, \
                int numFctEst, int npp, int *profMax );
 
 /* ---------------------------------- 
