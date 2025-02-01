@@ -1,2 +1,2 @@
-gcc -fopenmp simulation.c jeu.c -o simulation
+gcc -fopenmp -pg simulation.c jeu.c -o simulation
 ./simulation

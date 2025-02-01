@@ -19,6 +19,7 @@ Les fonctions sont regroupées en 4 parties :
 #include <stdlib.h>
 #include <string.h> 
 #include <time.h>
+#include <omp.h>
 #include "jeu.h"
 
 /*******************************************************/
@@ -78,96 +79,252 @@ static int D[8][2] = { {+1,0} , {+1,+1} , {0,+1} , {-1,+1} , {-1,0} , {-1,-1} , 
  frontière d'exploration (c-a-d lorsque la conf est stable et la profondeur est dans [hmin,hmax]).
  npp : le nombre de pieces dans la conf parente (pour verifier si conf est stable ou non) 
 */
-int minmax_ab( struct config *conf, int mode, int h, int alpha, int beta, int largeur, \
-               int numFctEst, int npp, int *profMax )
-{
-   int n, i, score, score2, npc, prof_atteinte;
-   struct config T[100];
 
-   // npc: le nombre de pieces dans conf (la configuration courante)
-   npc = npieces(conf);
+// sequential version
+// int minmax_ab( struct config *conf, int mode, int h, int alpha, int beta, int largeur, \
+//                int numFctEst, int npp, int *profMax )
+// {
+//    int n, i, score, score2, npc, prof_atteinte;
+//    struct config T[100];
 
-   // pour calculer la plus grande profondeur atteinte
-   *profMax = 0;
+//    // npc: le nombre de pieces dans conf (la configuration courante)
+//    npc = npieces(conf);
 
-   // si on a atteint une fin de partie, on retourne le score  : -100 , 0 ou +100
-   if ( feuille(conf, &score) ) 
-      return score;   // score = -100, 0 ou +100
+//    // pour calculer la plus grande profondeur atteinte
+//    *profMax = 0;
+
+//    // si on a atteint une fin de partie, on retourne le score  : -100 , 0 ou +100
+//    if ( feuille(conf, &score) ) 
+//       return score;   // score = -100, 0 ou +100
 	
-   // sinon, si le niveau minimum est atteint on vérifie la stabilité de conf
-   // ==> traitement de l' "effet horizon" :
-   if ( h >= hmin && (npp == npc || h == hmax) )
-      // si le nombre de pieces n'a pas changé par rapport au parent (c-a-d 'conf' est stable)
-      // ou la hauteur max 'hmax' est atteinte, 
-      // alors on évalue 'conf' avec l'estimation choisie : 'numFctEst'
-      return Est[numFctEst]( conf );  
+//    // sinon, si le niveau minimum est atteint on vérifie la stabilité de conf
+//    // ==> traitement de l' "effet horizon" :
+//    if ( h >= hmin && (npp == npc || h == hmax) )
+//       // si le nombre de pieces n'a pas changé par rapport au parent (c-a-d 'conf' est stable)
+//       // ou la hauteur max 'hmax' est atteinte, 
+//       // alors on évalue 'conf' avec l'estimation choisie : 'numFctEst'
+//       return Est[numFctEst]( conf );  
 
-   // sinon on continue à descendre (récursivement) dans l'arbre ... 
-   // (jusqu'à atteindre une 'conf' "stable" ou la profondeur 'hmax')
+//    // sinon on continue à descendre (récursivement) dans l'arbre ... 
+//    // (jusqu'à atteindre une 'conf' "stable" ou la profondeur 'hmax')
              
-   if ( mode == MAX ) {
+//    if ( mode == MAX ) {
 
-      generer_succ( conf, MAX, T, &n );
+//       generer_succ( conf, MAX, T, &n );
 
-      if ( largeur != +INFINI ) {
-         for (i=0; i<n; i++) 
-             T[i].val = Est[numFctEst]( &T[i] );                    
+//       if ( largeur != +INFINI ) {
+//          for (i=0; i<n; i++) 
+//              T[i].val = Est[numFctEst]( &T[i] );                    
 
-	 // trier en ordre decroissant les successeurs selon leurs estimations
-         qsort(T, n, sizeof(struct config), confcmp321);
-         if ( largeur < n ) n = largeur;   // eventuellement limiter la largeur d'exploration
-      }
+// 	 // trier en ordre decroissant les successeurs selon leurs estimations
+//          qsort(T, n, sizeof(struct config), confcmp321);
+//          if ( largeur < n ) n = largeur;   // eventuellement limiter la largeur d'exploration
+//       }
 
-      score = alpha;
-      for ( i=0; i<n; i++ ) {
-          score2 = minmax_ab( &T[i], MIN, h+1, score, beta, largeur, numFctEst, npc, &prof_atteinte);
-          prof_atteinte++;
-          if ( prof_atteinte > *profMax ) *profMax = prof_atteinte;   // m-a-j de la profondeur maximale atteinte
+//       score = alpha;
+//       for ( i=0; i<n; i++ ) {
+//           score2 = minmax_ab( &T[i], MIN, h+1, score, beta, largeur, numFctEst, npc, &prof_atteinte);
+//           prof_atteinte++;
+//           if ( prof_atteinte > *profMax ) *profMax = prof_atteinte;   // m-a-j de la profondeur maximale atteinte
 
-          if (score2 > score) score = score2;
-             if (score >= beta) {
-                // Coupe Beta
-                nbBeta++;       // compteur de coupes beta
-                return score;   // evaluation tronquee ***
-             }
-      } 
-   }
+//           if (score2 > score) score = score2;
+//              if (score >= beta) {
+//                 // Coupe Beta
+//                 nbBeta++;       // compteur de coupes beta
+//                 return score;   // evaluation tronquee ***
+//              }
+//       } 
+//    }
    
-   else  { // mode == MIN 
+//    else  { // mode == MIN 
 
-      generer_succ( conf, MIN, T, &n );
+//       generer_succ( conf, MIN, T, &n );
 
-      if ( largeur != +INFINI ) {
-         for (i=0; i<n; i++) 
-             T[i].val = Est[numFctEst]( &T[i] );                    
+//       if ( largeur != +INFINI ) {
+//          for (i=0; i<n; i++) 
+//              T[i].val = Est[numFctEst]( &T[i] );                    
 
-	 // trier en ordre croissant les successeurs selon leurs estimations
-         qsort(T, n, sizeof(struct config), confcmp123);
-         if ( largeur < n ) n = largeur;   // éventuellement limiter la largeur d'exploration
-      }
+// 	 // trier en ordre croissant les successeurs selon leurs estimations
+//          qsort(T, n, sizeof(struct config), confcmp123);
+//          if ( largeur < n ) n = largeur;   // éventuellement limiter la largeur d'exploration
+//       }
 
-      score = beta;
-      for ( i=0; i<n; i++ ) {
-          score2 = minmax_ab( &T[i], MAX, h+1, alpha, score, largeur, numFctEst, npc, &prof_atteinte );
-          prof_atteinte++;
-          if ( prof_atteinte > *profMax ) *profMax = prof_atteinte; // m-a-j de la profondeur maximale atteinte
+//       score = beta;
+//       for ( i=0; i<n; i++ ) {
+//           score2 = minmax_ab( &T[i], MAX, h+1, alpha, score, largeur, numFctEst, npc, &prof_atteinte );
+//           prof_atteinte++;
+//           if ( prof_atteinte > *profMax ) *profMax = prof_atteinte; // m-a-j de la profondeur maximale atteinte
 
-          if (score2 < score) score = score2;
-             if (score <= alpha) {
-                // Coupe Alpha
-                nbAlpha++;      // compteur de coupes alpha
-                return score;   // evaluation tronquee ***
-             }
-      }
+//           if (score2 < score) score = score2;
+//              if (score <= alpha) {
+//                 // Coupe Alpha
+//                 nbAlpha++;      // compteur de coupes alpha
+//                 return score;   // evaluation tronquee ***
+//              }
+//       }
       
-   } // end [if ( mode == MAX ) ... else ( mode == MIN ) ...]
+//    } // end [if ( mode == MAX ) ... else ( mode == MIN ) ...]
 
-   if ( score == +INFINI ) score = +100;
-   if ( score == -INFINI ) score = -100;
+//    if ( score == +INFINI ) score = +100;
+//    if ( score == -INFINI ) score = -100;
 
-   return score;
+//    return score;
 
-} // fin de minmax_ab
+// } // fin de minmax_ab
+
+// parallel version
+int minmax_ab(struct config *conf, int mode, int h, int alpha, int beta, int largeur, 
+              int numFctEst, int npp, int *profMax) {
+
+    const int PARALLEL_DEPTH = 3;
+    const int MIN_NODES_PARALLEL = 6;
+    int n, i, score, score2, npc, prof_atteinte;
+    struct config T[100];
+    
+    npc = npieces(conf);
+    *profMax = 0;
+    if (feuille(conf, &score)) 
+        return score;
+    
+    if (h >= hmin && (npp == npc || h == hmax))
+        return Est[numFctEst](conf);
+             
+    if (mode == MAX) {
+        generer_succ(conf, MAX, T, &n);
+        if (largeur != +INFINI) {
+            if (h <= PARALLEL_DEPTH && n >= MIN_NODES_PARALLEL) {
+                #pragma omp parallel for schedule(dynamic)
+                for (i = 0; i < n; i++) 
+                    T[i].val = Est[numFctEst](&T[i]);
+            } else {
+                for (i = 0; i < n; i++) 
+                    T[i].val = Est[numFctEst](&T[i]);
+            }
+            qsort(T, n, sizeof(struct config), confcmp321);
+            if (largeur < n) n = largeur;
+        }
+        score = alpha;
+        
+        if (h <= PARALLEL_DEPTH && n >= MIN_NODES_PARALLEL) {
+            #pragma omp parallel
+            {
+                int local_score = -INFINI;
+                
+                #pragma omp for schedule(dynamic) nowait
+                for (i = 0; i < n; i++) {
+                    int local_prof, temp_score;
+                    int should_skip = 0;
+                    
+                    #pragma omp critical
+                    {
+                        should_skip = (score >= beta);
+                    }
+                    
+                    if (should_skip) continue;
+                    
+                    temp_score = minmax_ab(&T[i], MIN, h+1, score, beta, 
+                                           largeur, numFctEst, npc, &local_prof);
+                    local_prof++;
+                    
+                    if (temp_score > local_score) local_score = temp_score;
+                    
+                    #pragma omp critical
+                    {
+                        if (local_prof > *profMax) *profMax = local_prof;
+                        if (local_score > score) {
+                            score = local_score;
+                            if (score >= beta) {
+                                #pragma omp atomic
+                                nbBeta++;
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            for (i = 0; i < n; i++) {
+                score2 = minmax_ab(&T[i], MIN, h+1, score, beta, largeur, 
+                                   numFctEst, npc, &prof_atteinte);
+                prof_atteinte++;
+                if (prof_atteinte > *profMax) *profMax = prof_atteinte;
+                if (score2 > score) score = score2;
+                if (score >= beta) {
+                    nbBeta++;
+                    return score;
+                }
+            }
+        }
+    } else { 
+        generer_succ(conf, MIN, T, &n);
+        if (largeur != +INFINI) {
+            if (h <= PARALLEL_DEPTH && n >= MIN_NODES_PARALLEL) {
+                #pragma omp parallel for schedule(dynamic)
+                for (i = 0; i < n; i++) 
+                    T[i].val = Est[numFctEst](&T[i]);
+            } else {
+                for (i = 0; i < n; i++) 
+                    T[i].val = Est[numFctEst](&T[i]);
+            }
+            qsort(T, n, sizeof(struct config), confcmp321);
+            if (largeur < n) n = largeur;
+        }
+        score = beta;
+        
+        if (h <= PARALLEL_DEPTH && n >= MIN_NODES_PARALLEL) {
+            #pragma omp parallel
+            {
+                int local_score = +INFINI;
+                
+                #pragma omp for schedule(dynamic) nowait
+                for (i = 0; i < n; i++) {
+                    int local_prof, temp_score;
+                    int should_skip = 0;
+                    
+                    #pragma omp critical
+                    {
+                        should_skip = (score <= alpha);
+                    }
+                    
+                    if (should_skip) continue;
+                    
+                    temp_score = minmax_ab(&T[i], MAX, h+1, alpha, score, 
+                                           largeur, numFctEst, npc, &local_prof);
+                    local_prof++;
+                    
+                    if (temp_score < local_score) local_score = temp_score;
+                    
+                    #pragma omp critical
+                    {
+                        if (local_prof > *profMax) *profMax = local_prof;
+                        if (local_score < score) {
+                            score = local_score;
+                            if (score <= alpha) {
+                                #pragma omp atomic
+                                nbAlpha++;
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            for (i = 0; i < n; i++) {
+                score2 = minmax_ab(&T[i], MAX, h+1, alpha, score, largeur, 
+                                   numFctEst, npc, &prof_atteinte);
+                prof_atteinte++;
+                if (prof_atteinte > *profMax) *profMax = prof_atteinte;
+                if (score2 < score) score = score2;
+                if (score <= alpha) {
+                    nbAlpha++;
+                    return score;
+                }
+            }
+        }
+    }
+    
+    if (score == +INFINI) score = +100;
+    if (score == -INFINI) score = -100;
+    return score;
+}
 
 /***********************************************************************************/
 

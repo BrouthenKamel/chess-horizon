@@ -8,7 +8,7 @@
 
 int hmin = 4;
 int hmax = 30;
-int largeur = 12; // +INFINI; // 10; // +INFINI;
+int largeur = 20; // +INFINI; // 10; // +INFINI;
 
 struct config Partie[MAXPARTIE];
 
@@ -41,8 +41,8 @@ int main( int argc, char *argv[] )
    Est[6] = estim7;
    nbEst = 7;
 
-   estMax=5; 
-   estMin=4;
+   estMax=1;
+   estMin=1;
 
    max_t = 0;
    min_t = 0;

@@ -1,0 +1,1 @@
+gprof simulation gmon.out > logs/profile/4.txt

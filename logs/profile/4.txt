@@ -1,0 +1,256 @@
+Flat profile:
+
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 30.80     36.67    36.67 150619615     0.00     0.00  estim5
+ 19.05     59.35    22.68 1806396866     0.00     0.00  egal
+ 17.78     80.53    21.17 147355009     0.00     0.00  caseMenaceePar
+ 14.72     98.05    17.52 140701049     0.00     0.00  copier
+  7.52    107.00     8.95 122027505     0.00     0.00  dejaVisitee
+  4.83    112.75     5.75 33837532     0.00     0.00  npieces
+  1.60    114.64     1.90  5245038     0.00     0.01  generer_succ
+  1.10    115.95     1.31 21941568     0.00     0.00  deplacementsB
+  1.10    117.27     1.31 13625936     0.00     0.00  deplacementsN
+  0.56    117.94     0.67     1076     0.62   109.76  minmax_ab
+  0.39    118.41     0.47                             confcmp321
+  0.36    118.83     0.43                             confcmp123
+  0.08    118.92     0.09 33837453     0.00     0.00  AucunCoupPossible
+  0.07    119.00     0.08 33837453     0.00     0.00  feuille
+  0.02    119.03     0.02                             affich
+  0.02    119.05     0.02                             sauvConf
+  0.01    119.06     0.01                             estim6
+  0.00    119.06     0.00    13253     0.00     0.00  transformPion
+  0.00    119.06     0.00        1     0.00     0.00  init_conf
+
+ %         the percentage of the total running time of the
+time       program used by this function.
+
+cumulative a running sum of the number of seconds accounted
+ seconds   for by this function and those listed above it.
+
+ self      the number of seconds accounted for by this
+seconds    function alone.  This is the major sort for this
+           listing.
+
+calls      the number of times this function was invoked, if
+           this function is profiled, else blank.
+
+ self      the average number of milliseconds spent in this
+ms/call    function per call, if this function is profiled,
+	   else blank.
+
+ total     the average number of milliseconds spent in this
+ms/call    function and its descendents per call, if this
+	   function is profiled, else blank.
+
+name       the name of the function.  This is the minor sort
+           for this listing. The index shows the location of
+	   the function in the gprof listing. If the index is
+	   in parenthesis it shows where it would appear in
+	   the gprof listing if it were to be printed.
+
+Copyright (C) 2012-2024 Free Software Foundation, Inc.
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.
+
+		     Call graph (explanation follows)
+
+
+granularity: each sample hit covers 4 byte(s) for 0.01% of 119.06 seconds
+
+index % time    self  children    called     name
+                                                 <spontaneous>
+[1]     99.2    0.00  118.11                 main [1]
+                0.67  117.43    1076/1076        minmax_ab [2]
+                0.00    0.00      79/5245038     generer_succ [3]
+                0.00    0.00    2396/150619615     estim5 [4]
+                0.00    0.00     207/140701049     copier [8]
+                0.00    0.00      79/33837532     npieces [11]
+                0.00    0.00       1/1           init_conf [20]
+-----------------------------------------------
+                             33836377             minmax_ab [2]
+                0.67  117.43    1076/1076        main [1]
+[2]     99.2    0.67  117.43    1076+33836377 minmax_ab [2]
+                1.90   72.94 5244959/5245038     generer_succ [3]
+               36.67    0.00 150617219/150619615     estim5 [4]
+                5.75    0.00 33837453/33837532     npieces [11]
+                0.08    0.09 33837453/33837453     feuille [14]
+                             33836377             minmax_ab [2]
+-----------------------------------------------
+                0.00    0.00      79/5245038     main [1]
+                1.90   72.94 5244959/5245038     minmax_ab [2]
+[3]     62.9    1.90   72.94 5245038         generer_succ [3]
+                8.95   22.68 122027505/122027505     dejaVisitee [5]
+               20.21    0.00 140700842/147355009     caseMenaceePar [7]
+                1.31   10.55 21941568/21941568     deplacementsB [9]
+                1.31    7.93 13625936/13625936     deplacementsN [10]
+-----------------------------------------------
+                0.00    0.00    2396/150619615     main [1]
+               36.67    0.00 150617219/150619615     minmax_ab [2]
+[4]     30.8   36.67    0.00 150619615         estim5 [4]
+-----------------------------------------------
+                8.95   22.68 122027505/122027505     generer_succ [3]
+[5]     26.6    8.95   22.68 122027505         dejaVisitee [5]
+               22.68    0.00 1806396866/1806396866     egal [6]
+-----------------------------------------------
+               22.68    0.00 1806396866/1806396866     dejaVisitee [5]
+[6]     19.0   22.68    0.00 1806396866         egal [6]
+-----------------------------------------------
+                0.40    0.00 2753642/147355009     deplacementsB [9]
+                0.56    0.00 3900525/147355009     deplacementsN [10]
+               20.21    0.00 140700842/147355009     generer_succ [3]
+[7]     17.8   21.17    0.00 147355009         caseMenaceePar [7]
+-----------------------------------------------
+                0.00    0.00     207/140701049     main [1]
+                0.01    0.00   53012/140701049     transformPion [19]
+                7.37    0.00 59171944/140701049     deplacementsN [10]
+               10.15    0.00 81475886/140701049     deplacementsB [9]
+[8]     14.7   17.52    0.00 140701049         copier [8]
+-----------------------------------------------
+                1.31   10.55 21941568/21941568     generer_succ [3]
+[9]     10.0    1.31   10.55 21941568         deplacementsB [9]
+               10.15    0.00 81475886/140701049     copier [8]
+                0.40    0.00 2753642/147355009     caseMenaceePar [7]
+                0.00    0.00    9558/13253       transformPion [19]
+-----------------------------------------------
+                1.31    7.93 13625936/13625936     generer_succ [3]
+[10]     7.8    1.31    7.93 13625936         deplacementsN [10]
+                7.37    0.00 59171944/140701049     copier [8]
+                0.56    0.00 3900525/147355009     caseMenaceePar [7]
+                0.00    0.00    3695/13253       transformPion [19]
+-----------------------------------------------
+                0.00    0.00      79/33837532     main [1]
+                5.75    0.00 33837453/33837532     minmax_ab [2]
+[11]     4.8    5.75    0.00 33837532         npieces [11]
+-----------------------------------------------
+                                                 <spontaneous>
+[12]     0.4    0.47    0.00                 confcmp321 [12]
+-----------------------------------------------
+                                                 <spontaneous>
+[13]     0.4    0.43    0.00                 confcmp123 [13]
+-----------------------------------------------
+                0.08    0.09 33837453/33837453     minmax_ab [2]
+[14]     0.1    0.08    0.09 33837453         feuille [14]
+                0.09    0.00 33837453/33837453     AucunCoupPossible [15]
+-----------------------------------------------
+                0.09    0.00 33837453/33837453     feuille [14]
+[15]     0.1    0.09    0.00 33837453         AucunCoupPossible [15]
+-----------------------------------------------
+                                                 <spontaneous>
+[16]     0.0    0.02    0.00                 affich [16]
+-----------------------------------------------
+                                                 <spontaneous>
+[17]     0.0    0.02    0.00                 sauvConf [17]
+-----------------------------------------------
+                                                 <spontaneous>
+[18]     0.0    0.01    0.00                 estim6 [18]
+-----------------------------------------------
+                0.00    0.00    3695/13253       deplacementsN [10]
+                0.00    0.00    9558/13253       deplacementsB [9]
+[19]     0.0    0.00    0.01   13253         transformPion [19]
+                0.01    0.00   53012/140701049     copier [8]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[20]     0.0    0.00    0.00       1         init_conf [20]
+-----------------------------------------------
+
+ This table describes the call tree of the program, and was sorted by
+ the total amount of time spent in each function and its children.
+
+ Each entry in this table consists of several lines.  The line with the
+ index number at the left hand margin lists the current function.
+ The lines above it list the functions that called this function,
+ and the lines below it list the functions this one called.
+ This line lists:
+     index	A unique number given to each element of the table.
+		Index numbers are sorted numerically.
+		The index number is printed next to every function name so
+		it is easier to look up where the function is in the table.
+
+     % time	This is the percentage of the `total' time that was spent
+		in this function and its children.  Note that due to
+		different viewpoints, functions excluded by options, etc,
+		these numbers will NOT add up to 100%.
+
+     self	This is the total amount of time spent in this function.
+
+     children	This is the total amount of time propagated into this
+		function by its children.
+
+     called	This is the number of times the function was called.
+		If the function called itself recursively, the number
+		only includes non-recursive calls, and is followed by
+		a `+' and the number of recursive calls.
+
+     name	The name of the current function.  The index number is
+		printed after it.  If the function is a member of a
+		cycle, the cycle number is printed between the
+		function's name and the index number.
+
+
+ For the function's parents, the fields have the following meanings:
+
+     self	This is the amount of time that was propagated directly
+		from the function into this parent.
+
+     children	This is the amount of time that was propagated from
+		the function's children into this parent.
+
+     called	This is the number of times this parent called the
+		function `/' the total number of times the function
+		was called.  Recursive calls to the function are not
+		included in the number after the `/'.
+
+     name	This is the name of the parent.  The parent's index
+		number is printed after it.  If the parent is a
+		member of a cycle, the cycle number is printed between
+		the name and the index number.
+
+ If the parents of the function cannot be determined, the word
+ `<spontaneous>' is printed in the `name' field, and all the other
+ fields are blank.
+
+ For the function's children, the fields have the following meanings:
+
+     self	This is the amount of time that was propagated directly
+		from the child into the function.
+
+     children	This is the amount of time that was propagated from the
+		child's children to the function.
+
+     called	This is the number of times the function called
+		this child `/' the total number of times the child
+		was called.  Recursive calls by the child are not
+		listed in the number after the `/'.
+
+     name	This is the name of the child.  The child's index
+		number is printed after it.  If the child is a
+		member of a cycle, the cycle number is printed
+		between the name and the index number.
+
+ If there are any cycles (circles) in the call graph, there is an
+ entry for the cycle-as-a-whole.  This entry shows who called the
+ cycle (as parents) and the members of the cycle (as children.)
+ The `+' recursive calls entry shows the number of function calls that
+ were internal to the cycle, and the calls entry for each member shows,
+ for that member, how many times it was called from other members of
+ the cycle.
+
+Copyright (C) 2012-2024 Free Software Foundation, Inc.
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.
+
+Index by function name
+
+  [15] AucunCoupPossible       [9] deplacementsB          [20] init_conf
+  [16] affich                 [10] deplacementsN           [2] minmax_ab
+   [7] caseMenaceePar          [6] egal                   [11] npieces
+  [13] confcmp123              [4] estim5                 [17] sauvConf
+  [12] confcmp321             [18] estim6                 [19] transformPion
+   [8] copier                 [14] feuille
+   [5] dejaVisitee             [3] generer_succ
