@@ -176,7 +176,7 @@ static int D[8][2] = { {+1,0} , {+1,+1} , {0,+1} , {-1,+1} , {-1,0} , {-1,-1} , 
 int minmax_ab(struct config *conf, int mode, int h, int alpha, int beta, int largeur, 
               int numFctEst, int npp, int *profMax) {
 
-    const int PARALLEL_DEPTH = 3;
+    const int PARALLEL_DEPTH = 4;
     const int MIN_NODES_PARALLEL = 6;
     int n, i, score, score2, npc, prof_atteinte;
     struct config T[100];

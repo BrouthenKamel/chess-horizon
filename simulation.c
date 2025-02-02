@@ -15,7 +15,7 @@ struct config Partie[MAXPARTIE];
 int num_coup = 0;
 
 int (*Est[10])(struct config *);
-int nbEst;
+int nbEst;  
 
 int nbAlpha = 0;
 int nbBeta = 0;
